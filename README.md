@@ -2,12 +2,12 @@
 Simulate and study poker games: base code is in "poker", code to simulate Omaha in "Omaha", code for low poker in "lowball".
 The .DAT data files each holds the data for a single, often large, variable; these are used with WS which is another repo (ws.ijs under JUtilities).
 
-For instance, the file "SIM6.DAT" holds the results of 5,000 simulations for 6 players.  This are very simple simulations with no betting: 
+For instance, the file "SIM6.DAT" holds the results of 20,000 simulations for 6 players.  This are very simple simulations with no betting: 
 all hands stay in to the end and the winners are noted.  The results of each simulation are in each row of this table:
 
    $sim6
    
-5000 5
+20000 5
 
    $&.>{.sim6
    
