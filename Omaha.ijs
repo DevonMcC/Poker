@@ -6,7 +6,7 @@ PKRDIR=: '\amisc\work\Poker'
 
 3 : 0 ''
    rr=. ''
-   if. -.nameExists 'HandTypes' do. rr=. getPokerVars 'HANDRATED';'RH5';'HandTypes' end.
+   if. -.nameExists 'HandTypes' do. rr=. getPokerVars 'HANDRATED';'RH5';'RH5c';'HandTypes' end.
    rr
 )
 
@@ -14,6 +14,15 @@ someGlobals=: 0 : 0
    CPNP=. ([: <: #/.~) &.> (<allHCcombos),&.>allHC  NB. Assumes "allHC" which could be quite large.
    allHCcombos=: a.{~/:~/:~"1 ] 4 AllCombos 52
 )
+
+NB.* cvtDisp2Internal: convert from display to internal form, eg '2C'->0.
+cvtDisp2Internal=: 3 : 0
+   'val suit'=. _1 (}.;{.) y-.' '       NB. eg 'AC' -> 'A';'C'
+   (RANK i. <val)+13*SUIT i. toupper suit
+)
+
+NB.* charifySim: convert cards from ints to chars for sim result.
+charifySim=: 3 : '(<a.{~>0{y) 0}(<a.{~>1{y) 1}(<a.{~>4{y) 4}y'"1
 
 getHCforNplayers=: 3 : 0
    assert. 'D:\amisc\work\Poker' -: 1!:43''
@@ -24,9 +33,16 @@ getHCforNplayers=: 3 : 0
 
 NB.* rateHC: rate 4 hole cards using global CPNP (count of each combo in winning hands).
 rateHC=: 3 : 0
-   if. 5=#y=. <;._1 ' ',deb y do. y=. }.y [ NP=: ".;{.y end.
+NB. Convert cards' format to internal (0-51).
+   if. ' '=1{.0$y do.                   NB. Chars
+       if. 1 e. 51<a. i. y do.           NB. eg AC 6D 10H ...
+           if. 5=#y=. <;._1 ' ',deb toupper y do. y=. }.y [ NP=: ".>{.y end.
+           y=. ,cvtDisp2Internal &>y
+       else. y=. a. i. y end.
+   elseif. 2=#$y do. y=. 13#.&.|:y end.  NB. Assume already internal form
+   if. -.nameExists 'NP' do. NP=: 6 end.
    cts=. (2 3 4 5 6 7 8 9 i. NP){CPNP
-   tc=. cts{~allHCcombos i.a.{~/:~13#.|: showCards toupper&.>y
+   tc=. cts{~allHCcombos i. a.{~/:~y
    (tc+/ . >cts)%#allHCcombos
 NB.EG rateHC '5 6D 7H JD 2H'  NB. 5 players in game
 NB.EG rateHC '2D 5C 9C QH'    NB. Same # of players as last time
@@ -89,9 +105,9 @@ NB.EG 'nways sum1'=. summarizeWinners omahasim6
 )
 
 isValidHand=: (51 *./ .>: ]) *. (0 *./ .<: ]) *. (5 *./ .= # , #@~.) *. ] *./ .= <.
-poss3of5=: 13 : '(] #~ 3 = #@:~.&>) ~./:~&.>,{3$<y'
-poss2of4=: 13 : '~./:~&.>(~:/&> # ]),{2$<y'
-allPoss=: 13 : ';&.>,{(poss2of4 y);<poss3of5 x'
+poss3OutOf=: 13 : '(] #~ 3 = #@:~.&>) ~./:~&.>,{3$<y'
+poss2OutOf=: 13 : '~./:~&.>(~:/&> # ]),{2$<y'
+allPoss=: 13 : ';&.>,{(poss2OutOf y);<poss3OutOf x'
 
 findBest0=: 4 : '1 i:~x e. y'
 
@@ -119,11 +135,11 @@ NB.   maxsub=. 1{>./ HANDRATED  NB. 8 2860 -: >./ HANDRATED
    end.
 NB. fht\:~(htype,.showCards&>finalHands),.<"1 fht
    ranks=. (/:\:fht){~i.~fht       NB. Ties get same ranks, 0 is best
-NB.   if. 1<0+/ . = ranks do.         NB. Tie for 1st
-NB.   holeCards,.finalHands,.fht,.ranks    NB. Return 8-col int mat
+NB.   if. 1<0+/ . = ranks do.      NB. Tie for 1st
+NB.   holeCards,.finalHands,.fht,.ranks NB. Return 8-col int mat
    if. x do.
-      holeCards;(>finalHands);fht;ranks;<common    NB. Return 5-item enc vec
-   else. <holeCards#~0=ranks end.                  NB. or only hole cards of winners.
+      (a.{~holeCards);(a.{~>finalHands);fht;ranks;<a.{~common    NB. Return 5-item enc vec: cards as char
+   else. <a.{~holeCards#~0=ranks end.                  NB. or only hole cards of winners.
 )
 
 NB.* cardImages: write image of cards y to file x.
@@ -146,6 +162,7 @@ e2l=: 3 : 0
 :
    str=. x
    (-#str)}.;y,&.><str
+NB.EG 'Alabama, Alaska, Arkansas' -: e2l 'Alabama';'Alaska';'Arkansas'
 )
 
 eg0=. 0 : 0
