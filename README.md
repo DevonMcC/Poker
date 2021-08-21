@@ -14,8 +14,9 @@ all hands stay in to the end and the winners are noted.  The results of each sim
 +---+---+---+-+-+
 
 |6 4|6 5|6 2|6|5|
+
 +---+---+---+-+-+
    
-The first 6x4 cell holds the hole cards for 6 players; the (next) 6x5 shows the best winning hand for each corresponding player; the 6x2 marks the 
+The first 6x4 cell are the 4 hole cards for each of the 6 players; the (next) 6x5 shows the best winning hand for each corresponding player; the 6x2 marks the 
 hand values with column 0 being the hand type, as shown in "HandTypes", and column 1 the rank within the type; the 6-element vector ranks each
-player's final hand from zero (best) to 5 (worst); the final 5-element vector is the board - the common cards.
+player's final hand from zero (best) to 5 (worst) - ties get the same rank; the final 5-element vector is the board - the common cards.
