@@ -6,8 +6,11 @@ For instance, the file "SIM6.DAT" holds the results of 5,000 simulations for 6 p
 all hands stay in to the end and the winners are noted.  The results of each simulation are in each row of this table:
 
    $sim6
+   
 5000 5
+
    $&.>{.sim6
+   
 +---+---+---+-+-+
 |6 4|6 5|6 2|6|5|
 +---+---+---+-+-+
