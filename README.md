@@ -14,7 +14,6 @@ all hands stay in to the end and the winners are noted.  The results of each sim
 +---+---+---+-+-+
 
 |6 4|6 5|6 2|6|5|
-
 +---+---+---+-+-+
    
 The first 6x4 cell holds the hole cards for 6 players; the (next) 6x5 shows the best winning hand for each corresponding player; the 6x2 marks the 
